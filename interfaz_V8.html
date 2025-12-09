@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Patentes DOM La Serena V8</title>
+  <style>
+    :root {
+      --primary: #1a73e8;
+      --primary-dark: #1557b0;
+      --success: #34a853;
+      --warning: #fbbc04;
+      --danger: #ea4335;
+      --bg-light: #f8f9fa;
+      --border: #dadce0;
+      --text: #202124;
+      --text-secondary: #5f6368;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Google Sans', 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-light);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(26,115,232,0.3);
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 5px;
+      background: white;
+      padding: 10px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      background: var(--bg-light);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Tab Content */
+    .tab-content {
+      display: none;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .tab-content h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 10px;
+    }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      box-shadow: 0 2px 8px rgba(26,115,232,0.3);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #2d9249;
+    }
+
+    .btn-warning {
+      background: var(--warning);
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    tr:hover {
+      background: #f1f3f4;
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 25px;
+    }
+
+    .stat-card .number {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-card .label {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    /* Status badges */
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-pendiente { background: #fff3cd; color: #856404; }
+    .badge-form_enviado { background: #cce5ff; color: #004085; }
+    .badge-listo_visita { background: #d4edda; color: #155724; }
+    .badge-programado { background: #d1ecf1; color: #0c5460; }
+    .badge-inspeccionado { background: #e2e3e5; color: #383d41; }
+    .badge-local_apto { background: #c3e6cb; color: #155724; }
+    .badge-observado { background: #fff3cd; color: #856404; }
+    .badge-denegado { background: #f8d7da; color: #721c24; }
+    .badge-desistido { background: #f8d7da; color: #721c24; }
+
+    /* Alerts */
+    .alert {
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .alert-info {
+      background: #e8f4fd;
+      color: #1967d2;
+      border-left: 4px solid #1967d2;
+    }
+
+    .alert-success {
+      background: #e6f4ea;
+      color: #137333;
+      border-left: 4px solid #137333;
+    }
+
+    .alert-warning {
+      background: #fef7e0;
+      color: #ea8600;
+      border-left: 4px solid #ea8600;
+    }
+
+    .alert-error {
+      background: #fce8e6;
+      color: #c5221f;
+      border-left: 4px solid #c5221f;
+    }
+
+    /* Loading */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .tabs {
+        flex-direction: column;
+      }
+
+      .tab-btn {
+        width: 100%;
+        text-align: left;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🏛️ Sistema de Gestión de Patentes V8</h1>
+      <p>Dirección de Obras Municipales - La Serena</p>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="registro">📝 Registro</button>
+      <button class="tab-btn" data-tab="programacion">📅 Programación</button>
+      <button class="tab-btn" data-tab="inspeccion">📱 Inspección</button>
+      <button class="tab-btn" data-tab="documentos">📄 Documentos</button>
+      <button class="tab-btn" data-tab="consultas">🔍 Consultas</button>
+      <button class="tab-btn" data-tab="estadisticas">📊 Estadísticas</button>
+    </div>
+
+    <!-- Tab 1: Registro -->
+    <div id="tab-registro" class="tab-content active">
+      <h2>📝 Registrar Nueva Solicitud</h2>
+
+      <div class="alert alert-info">
+        ℹ️ Complete los datos básicos del solicitante. Se enviará un formulario por email para completar la información.
+      </div>
+
+      <form id="form-registro">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre del Solicitante *</label>
+            <input type="text" id="reg-nombre" required placeholder="Nombre completo">
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="reg-email" required placeholder="correo@ejemplo.com">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>RUT</label>
+            <input type="text" id="reg-rut" placeholder="12.345.678-9">
+          </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" id="reg-telefono" placeholder="+56 9 1234 5678">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Dirección del Local</label>
+          <input type="text" id="reg-direccion" placeholder="Calle, número, local">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Sector</label>
+            <select id="reg-sector">
+              <option value="">-- Seleccione sector --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tipo de Trámite</label>
+            <select id="reg-tipo">
+              <option value="NUEVA">Nueva Patente</option>
+              <option value="RENOVACION">Renovación</option>
+              <option value="MODIFICACION">Modificación</option>
+              <option value="TRASLADO">Traslado</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">
+            ✉️ Registrar y Enviar Formulario
+          </button>
+          <button type="reset" class="btn btn-outline">Limpiar</button>
+        </div>
+      </form>
+
+      <div id="resultado-registro" class="alert" style="display:none; margin-top:20px;"></div>
+    </div>
+
+    <!-- Tab 2: Programación -->
+    <div id="tab-programacion" class="tab-content">
+      <h2>📅 Programación de Inspecciones</h2>
+
+      <div class="card">
+        <h3>Casos Listos para Programar</h3>
+        <div class="actions" style="margin-bottom:15px;">
+          <button class="btn btn-primary" onclick="cargarListosVisita()">🔄 Actualizar Lista</button>
+        </div>
+
+        <div class="table-container">
+          <table id="tabla-programacion">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="select-all-prog" onchange="toggleSelectAll(this, 'programacion')"></th>
+                <th>REG</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Sector</th>
+                <th>Fecha Prog.</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-programacion">
+              <tr><td colspan="6" style="text-align:center;color:#888;">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Asignar Inspección</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Fecha de Inspección</label>
+            <input type="date" id="fecha-inspeccion">
+          </div>
+          <div class="form-group">
+            <label>Inspector Asignado</label>
+            <select id="inspector-asignado">
+              <option value="">-- Seleccione inspector --</option>
+              <option value="INSPECTOR_1">Inspector 1</option>
+              <option value="INSPECTOR_2">Inspector 2</option>
+              <option value="INSPECTOR_3">Inspector 3</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-success" onclick="programarSeleccionados()">
+            ✅ Programar Seleccionados
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Inspección iPad -->
+    <div id="tab-inspeccion" class="tab-content">
+      <h2>📱 Envío a iPad para Inspección</h2>
+
+      <div class="alert alert-info">
+        📧 Los emails se envían automáticamente a tu cuenta de Google conectada.
+      </div>
+
+      <div class="card">
+        <h3>Casos Programados</h3>
+        <div class="form-row" style="margin-bottom:15px;">
+          <div class="form-group">
+            <label>Filtrar por Fecha</label>
+            <input type="date" id="fecha-filtro-ipad" onchange="cargarCasosInspeccion()">
+          </div>
+        </div>
+
+        <div class="actions" style="margin-bottom:15px;">
+          <button class="btn btn-primary" onclick="cargarCasosInspeccion()">🔄 Actualizar</button>
+        </div>
+
+        <div class="table-container">
+          <table id="tabla-inspeccion">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="select-all-insp" onchange="toggleSelectAll(this, 'inspeccion')"></th>
+                <th>REG</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Hora</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-inspeccion">
+              <tr><td colspan="6" style="text-align:center;color:#888;">Seleccione fecha</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Enviar a Inspector</h3>
+        <div class="actions">
+          <button class="btn btn-success" onclick="enviarListaInspeccion()">
+            📨 Enviar Lista Completa
+          </button>
+          <button class="btn btn-primary" onclick="enviarEmailIPad()">
+            📱 Enviar Link iPad
+          </button>
+          <button class="btn btn-outline" onclick="generarDocArchivo()">
+            📋 Generar Doc. Archivo
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Documentos -->
+    <div id="tab-documentos" class="tab-content">
+      <h2>📄 Generación de Documentos</h2>
+
+      <div class="card">
+        <h3>Buscar Registro</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Número de Registro (REG)</label>
+            <input type="text" id="doc-reg" placeholder="Ej: 2024-001">
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="buscarParaDocumentos()">🔍 Buscar</button>
+          </div>
+        </div>
+
+        <div id="info-registro" style="display:none; margin-top:20px;">
+          <div class="alert alert-info">
+            <strong>REG:</strong> <span id="doc-info-reg"></span><br>
+            <strong>Nombre:</strong> <span id="doc-info-nombre"></span><br>
+            <strong>Email:</strong> <span id="doc-info-email"></span><br>
+            <strong>Dirección:</strong> <span id="doc-info-direccion"></span><br>
+            <strong>Estado:</strong> <span id="doc-info-estado" class="badge"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="panel-documentos" style="display:none;">
+        <h3>Generar Documentos</h3>
+        <div class="card-grid">
+          <div class="card" style="text-align:center;">
+            <h4>📋 Contracara</h4>
+            <p style="color:#888;font-size:13px;margin:10px 0;">Formulario oficial de inspección</p>
+            <button class="btn btn-primary" onclick="generarContracara()">Generar</button>
+          </div>
+
+          <div class="card" style="text-align:center;">
+            <h4>📝 Informe Post-Inspección</h4>
+            <p style="color:#888;font-size:13px;margin:10px 0;">Reporte + Actas según resultado</p>
+            <button class="btn btn-success" onclick="generarInformePost()">Generar</button>
+          </div>
+
+          <div class="card" style="text-align:center;">
+            <h4>✅ Acta de Patente</h4>
+            <p style="color:#888;font-size:13px;margin:10px 0;">Para locales aptos</p>
+            <button class="btn btn-success" onclick="generarActaPatente()">Generar</button>
+          </div>
+
+          <div class="card" style="text-align:center;">
+            <h4>⚠️ Acta Observaciones</h4>
+            <p style="color:#888;font-size:13px;margin:10px 0;">Para locales observados</p>
+            <button class="btn btn-warning" onclick="generarActaObs()">Generar</button>
+          </div>
+
+          <div class="card" style="text-align:center;">
+            <h4>❌ Acta Denegación</h4>
+            <p style="color:#888;font-size:13px;margin:10px 0;">Para locales denegados</p>
+            <button class="btn btn-danger" onclick="generarActaDeneg()">Generar</button>
+          </div>
+
+          <div class="card" style="text-align:center;">
+            <h4>📊 Reporte Jefatura</h4>
+            <p style="color:#888;font-size:13px;margin:10px 0;">Estadísticas del período</p>
+            <button class="btn btn-outline" onclick="generarReporteJefatura()">Generar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="resultado-documento" class="alert" style="display:none; margin-top:20px;"></div>
+    </div>
+
+    <!-- Tab 5: Consultas -->
+    <div id="tab-consultas" class="tab-content">
+      <h2>🔍 Consultas y Búsquedas</h2>
+
+      <div class="card">
+        <h3>Buscar Registro</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Buscar por</label>
+            <select id="consulta-campo">
+              <option value="REG">Número de Registro</option>
+              <option value="NOMBRE">Nombre</option>
+              <option value="RUT">RUT</option>
+              <option value="DIRECCION">Dirección</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Valor a buscar</label>
+            <input type="text" id="consulta-valor" placeholder="Ingrese valor...">
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="realizarConsulta()">🔍 Buscar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Filtrar por Estado</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Estado</label>
+            <select id="consulta-estado">
+              <option value="">-- Todos --</option>
+              <option value="PENDIENTE">Pendiente</option>
+              <option value="FORM_ENVIADO">Form Enviado</option>
+              <option value="LISTO_VISITA">Listo para Visita</option>
+              <option value="PROGRAMADO">Programado</option>
+              <option value="INSPECCIONADO">Inspeccionado</option>
+              <option value="LOCAL_APTO">Local Apto</option>
+              <option value="OBSERVADO">Observado</option>
+              <option value="DENEGADO">Denegado</option>
+              <option value="DESISTIDO">Desistido</option>
+            </select>
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-outline" onclick="filtrarPorEstado()">Filtrar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table id="tabla-consultas">
+          <thead>
+            <tr>
+              <th>REG</th>
+              <th>Nombre</th>
+              <th>Dirección</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-consultas">
+            <tr><td colspan="6" style="text-align:center;color:#888;">Realice una búsqueda</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 6: Estadísticas -->
+    <div id="tab-estadisticas" class="tab-content">
+      <h2>📊 Estadísticas del Sistema</h2>
+
+      <div class="actions" style="margin-bottom:20px;">
+        <button class="btn btn-primary" onclick="cargarEstadisticas()">🔄 Actualizar Estadísticas</button>
+      </div>
+
+      <div class="card-grid" id="stats-cards">
+        <div class="card stat-card">
+          <div class="number" id="stat-total">--</div>
+          <div class="label">Total Registros</div>
+        </div>
+        <div class="card stat-card">
+          <div class="number" id="stat-pendientes" style="color:#fbbc04;">--</div>
+          <div class="label">Pendientes</div>
+        </div>
+        <div class="card stat-card">
+          <div class="number" id="stat-listos" style="color:#1a73e8;">--</div>
+          <div class="label">Listos para Visita</div>
+        </div>
+        <div class="card stat-card">
+          <div class="number" id="stat-aptos" style="color:#34a853;">--</div>
+          <div class="label">Locales Aptos</div>
+        </div>
+        <div class="card stat-card">
+          <div class="number" id="stat-observados" style="color:#4285f4;">--</div>
+          <div class="label">Observados</div>
+        </div>
+        <div class="card stat-card">
+          <div class="number" id="stat-desistidos" style="color:#ea4335;">--</div>
+          <div class="label">Desistidos</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h3>Resumen por Sector</h3>
+        <div class="table-container">
+          <table id="tabla-sectores">
+            <thead>
+              <tr>
+                <th>Sector</th>
+                <th>Total</th>
+                <th>Pendientes</th>
+                <th>Aptos</th>
+                <th>Observados</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-sectores">
+              <tr><td colspan="5" style="text-align:center;color:#888;">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Procesando...</p>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // CONFIGURACIÓN GLOBAL
+    // ═══════════════════════════════════════════════════════════════
+
+    const APP_CONFIG = {
+      autoHideAlerts: true,
+      alertTimeout: 5000,
+      dateFormat: 'es-CL'
+    };
+
+    // ═══════════════════════════════════════════════════════════════
+    // NAVEGACIÓN DE TABS - CORREGIDA
+    // ═══════════════════════════════════════════════════════════════
+
+    function showTab(tabId) {
+      try {
+        // Ocultar todos los contenidos
+        document.querySelectorAll('.tab-content').forEach(tab => {
+          tab.classList.remove('active');
+        });
+
+        // Desactivar todos los botones
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+
+        // Mostrar tab seleccionado
+        const targetTab = document.getElementById('tab-' + tabId);
+        if (targetTab) {
+          targetTab.classList.add('active');
+        } else {
+          console.error('Tab no encontrado:', tabId);
+          return;
+        }
+
+        // Activar botón correspondiente
+        const targetBtn = document.querySelector('[data-tab="' + tabId + '"]');
+        if (targetBtn) {
+          targetBtn.classList.add('active');
+        }
+
+        // Cargar datos según tab
+        switch(tabId) {
+          case 'programacion':
+            cargarListosVisita();
+            break;
+          case 'estadisticas':
+            cargarEstadisticas();
+            break;
+          case 'inspeccion':
+            // Verificar si ya hay fecha seleccionada
+            const fecha = document.getElementById('fecha-filtro-ipad').value;
+            if (fecha) {
+              cargarCasosInspeccion();
+            }
+            break;
+        }
+      } catch (error) {
+        console.error('Error en showTab:', error);
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // UTILIDADES - MEJORADAS
+    // ═══════════════════════════════════════════════════════════════
+
+    function showLoading() {
+      const loading = document.getElementById('loading');
+      if (loading) loading.classList.add('active');
+    }
+
+    function hideLoading() {
+      const loading = document.getElementById('loading');
+      if (loading) loading.classList.remove('active');
+    }
+
+    function showMessage(elementId, message, type) {
+      const el = document.getElementById(elementId);
+      if (!el) {
+        console.error('Elemento no encontrado:', elementId);
+        return;
+      }
+
+      el.style.display = 'block';
+      el.className = 'alert alert-' + type;
+      el.innerHTML = message;
+
+      if (APP_CONFIG.autoHideAlerts && type !== 'error') {
+        setTimeout(() => {
+          el.style.display = 'none';
+        }, APP_CONFIG.alertTimeout);
+      }
+    }
+
+    // FUNCIÓN CORREGIDA: toggleSelectAll
+    function toggleSelectAll(checkbox, tableType) {
+      try {
+        let selector;
+        if (tableType === 'programacion') {
+          selector = '#tbody-programacion input[type="checkbox"]';
+        } else if (tableType === 'inspeccion') {
+          selector = '#tbody-inspeccion input[type="checkbox"]';
+        } else {
+          console.error('Tipo de tabla no reconocido:', tableType);
+          return;
+        }
+
+        const checkboxes = document.querySelectorAll(selector);
+        checkboxes.forEach(cb => {
+          cb.checked = checkbox.checked;
+        });
+
+        console.log('Seleccionados ' + checkboxes.length + ' elementos en tabla ' + tableType);
+      } catch (error) {
+        console.error('Error en toggleSelectAll:', error);
+      }
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return '-';
+      try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString(APP_CONFIG.dateFormat);
+      } catch (error) {
+        return dateString;
+      }
+    }
+
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
+    function sanitizeInput(input) {
+      if (typeof input !== 'string') return input;
+      return input.trim();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TAB 1: REGISTRO - MEJORADO
+    // ═══════════════════════════════════════════════════════════════
+
+    document.getElementById('form-registro').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Validar email
+      const email = document.getElementById('reg-email').value;
+      if (!validateEmail(email)) {
+        showMessage('resultado-registro', '❌ Email inválido. Por favor ingrese un email válido.', 'error');
+        return;
+      }
+
+      const datos = {
+        nombre: sanitizeInput(document.getElementById('reg-nombre').value),
+        email: sanitizeInput(email),
+        rut: sanitizeInput(document.getElementById('reg-rut').value),
+        telefono: sanitizeInput(document.getElementById('reg-telefono').value),
+        direccion: sanitizeInput(document.getElementById('reg-direccion').value),
+        sector: document.getElementById('reg-sector').value,
+        tipo: document.getElementById('reg-tipo').value
+      };
+
+      // Validar campos requeridos
+      if (!datos.nombre || !datos.email) {
+        showMessage('resultado-registro', '❌ Por favor complete todos los campos requeridos (*)', 'error');
+        return;
+      }
+
+      showLoading();
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideLoading();
+          if (result && result.exito) {
+            showMessage('resultado-registro',
+              '✅ <strong>Registro exitoso</strong><br>' +
+              'REG: <strong>' + result.reg + '</strong><br>' +
+              'Formulario enviado a: ' + datos.email, 'success');
+            document.getElementById('form-registro').reset();
+          } else {
+            const errorMsg = (result && result.msg) ? result.msg : 'Error desconocido';
+            showMessage('resultado-registro', '❌ Error: ' + errorMsg, 'error');
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          console.error('Error en registrarUsuario:', error);
+          showMessage('resultado-registro', '❌ Error del servidor: ' + error.message, 'error');
+        })
+        .registrarUsuario(datos.nombre, datos.email, datos.rut, datos.telefono,
+                          datos.direccion, datos.sector, datos.tipo);
+    });
+
+    function cargarSectores() {
+      google.script.run
+        .withSuccessHandler(function(sectores) {
+          const select = document.getElementById('reg-sector');
+          if (!select) return;
+
+          // Limpiar opciones existentes (excepto la primera)
+          while (select.options.length > 1) {
+            select.remove(1);
+          }
+
+          if (sectores && Array.isArray(sectores)) {
+            sectores.forEach(s => {
+              const opt = document.createElement('option');
+              opt.value = s.codigo;
+              opt.textContent = s.codigo + ' - ' + s.nombre;
+              select.appendChild(opt);
+            });
+          }
+        })
+        .withFailureHandler(function(error) {
+          console.error('Error cargando sectores:', error);
+        })
+        .obtenerSectores();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TAB 2: PROGRAMACIÓN - MEJORADA
+    // ═══════════════════════════════════════════════════════════════
+
+    function cargarListosVisita() {
+      const tbody = document.getElementById('tbody-programacion');
+      if (!tbody) return;
+
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">⏳ Cargando...</td></tr>';
+
+      google.script.run
+        .withSuccessHandler(function(casos) {
+          if (!casos || casos.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;">ℹ️ No hay casos pendientes de programar</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = casos.map(c => `
+            <tr>
+              <td><input type="checkbox" class="cb-prog" data-reg="${c.reg || ''}"></td>
+              <td>${c.reg || '-'}</td>
+              <td>${c.nombre || '-'}</td>
+              <td>${c.direccion || '-'}</td>
+              <td>${c.sector || '-'}</td>
+              <td>${c.fechaProg ? formatDate(c.fechaProg) : '-'}</td>
+            </tr>
+          `).join('');
+        })
+        .withFailureHandler(function(error) {
+          console.error('Error cargando listos para visita:', error);
+          tbody.innerHTML = '<tr><td colspan="6" style="color:red;">❌ Error: ' + error.message + '</td></tr>';
+        })
+        .obtenerListosParaVisita();
+    }
+
+    function programarSeleccionados() {
+      const fecha = document.getElementById('fecha-inspeccion').value;
+      const inspector = document.getElementById('inspector-asignado').value;
+
+      if (!fecha) {
+        alert('⚠️ Por favor seleccione una fecha de inspección');
+        return;
+      }
+
+      const seleccionados = [];
+      document.querySelectorAll('.cb-prog:checked').forEach(cb => {
+        const reg = cb.dataset.reg;
+        if (reg) seleccionados.push(reg);
+      });
+
+      if (seleccionados.length === 0) {
+        alert('⚠️ Por favor seleccione al menos un caso para programar');
+        return;
+      }
+
+      const confirmMsg = '¿Confirma programar ' + seleccionados.length + ' caso(s) para el ' + fecha + '?';
+      if (!confirm(confirmMsg)) {
+        return;
+      }
+
+      showLoading();
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideLoading();
+          if (result && result.exito) {
+            alert('✅ ' + (result.msg || 'Inspecciones programadas correctamente'));
+            cargarListosVisita();
+            // Desmarcar checkbox "seleccionar todo"
+            const selectAll = document.getElementById('select-all-prog');
+            if (selectAll) selectAll.checked = false;
+          } else {
+            alert('❌ Error: ' + (result.msg || 'Error desconocido'));
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          console.error('Error programando inspecciones:', error);
+          alert('❌ Error del servidor: ' + error.message);
+        })
+        .programarInspecciones(seleccionados, fecha, inspector);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TAB 3: INSPECCIÓN iPAD - MEJORADA
+    // ═══════════════════════════════════════════════════════════════
+
+    function cargarCasosInspeccion() {
+      const fecha = document.getElementById('fecha-filtro-ipad').value;
+      const tbody = document.getElementById('tbody-inspeccion');
+
+      if (!tbody) return;
+
+      if (!fecha) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;">📅 Seleccione una fecha</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">⏳ Cargando...</td></tr>';
+
+      google.script.run
+        .withSuccessHandler(function(casos) {
+          if (!casos || casos.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;">ℹ️ No hay casos programados para esta fecha</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = casos.map(c => {
+            const estadoLower = (c.estado || 'pendiente').toLowerCase().replace(/ /g, '_');
+            return `
+              <tr>
+                <td><input type="checkbox" class="cb-insp" data-reg="${c.reg || ''}"></td>
+                <td>${c.reg || '-'}</td>
+                <td>${c.nombre || '-'}</td>
+                <td>${c.direccion || '-'}</td>
+                <td>${c.hora || '-'}</td>
+                <td><span class="badge badge-${estadoLower}">${c.estado || '-'}</span></td>
+              </tr>
+            `;
+          }).join('');
+        })
+        .withFailureHandler(function(error) {
+          console.error('Error cargando casos de inspección:', error);
+          tbody.innerHTML = '<tr><td colspan="6" style="color:red;">❌ Error: ' + error.message + '</td></tr>';
+        })
+        .obtenerCasosProgramados(fecha);
+    }
+
+    function enviarListaInspeccion() {
+      const fecha = document.getElementById('fecha-filtro-ipad').value;
+
+      if (!fecha) {
+        alert('⚠️ Por favor seleccione una fecha primero');
+        return;
+      }
+
+      if (!confirm('¿Enviar lista de inspección del ' + fecha + ' a tu email?')) {
+        return;
+      }
+
+      showLoading();
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideLoading();
+          if (result && result.exito) {
+            alert('✅ Email enviado correctamente a tu cuenta de Google');
+          } else {
+            alert('❌ Error: ' + (result.msg || 'No se pudo enviar el email'));
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          console.error('Error enviando lista:', error);
+          alert('❌ Error del servidor: ' + error.message);
+        })
+        .enviarListaInspeccionEmail(fecha, null);
+    }
+
+    function enviarEmailIPad() {
+      const fecha = document.getElementById('fecha-filtro-ipad').value;
+
+      if (!fecha) {
+        alert('⚠️ Por favor seleccione una fecha primero');
+        return;
+      }
+
+      if (!confirm('¿Enviar link para iPad del ' + fecha + ' a tu email?')) {
+        return;
+      }
+
+      showLoading();
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideLoading();
+          if (result && result.exito) {
+            alert('✅ Link iPad enviado correctamente a tu cuenta de Google');
+          } else {
+            alert('❌ Error: ' + (result.msg || 'No se pudo enviar el link'));
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          console.error('Error enviando link iPad:', error);
+          alert('❌ Error del servidor: ' + error.message);
+        })
+        .enviarLinkIPad(fecha, null);
+    }
+
+    function generarDocArchivo() {
+      const fecha = document.getElementById('fecha-filtro-ipad').value;
+
+      if (!fecha) {
+        alert('⚠️ Por favor seleccione una fecha primero');
+        return;
+      }
+
+      showLoading();
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideLoading();
+          if (result && result.url) {
+            window.open(result.url, '_blank');
+          } else {
+            alert('❌ Error generando documento de archivo');
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          console.error('Error generando documento:', error);
+          alert('❌ Error: ' + error.message);
+        })
+        .generarDocumentoArchivo(fecha);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TAB 4: DOCUMENTOS - MEJORADA
+    // ═══════════════════════════════════════════════════════════════
+
+    let regActualDoc = null;
+
+    function buscarParaDocumentos() {
+      const reg = sanitizeInput(document.getElementById('doc-reg').value);
+
+      if (!reg) {
+        alert('⚠️ Por favor ingrese un número de registro');
+        return;
+      }
+
+      showLoading();
+
+      google.script.run
+        .withSuccessHandler(function(datos) {
+          hideLoading();
+          if (datos) {
+            regActualDoc = reg;
+
+            document.getElementById('doc-info-reg').textContent = reg;
+            document.getElementById('doc-info-nombre').textContent = datos.NOMBRE || 'Sin nombre';
+            document.getElementById('doc-info-email').textContent = datos.EMAIL || 'Sin email';
+            document.getElementById('doc-info-direccion').textContent = datos.DIRECCION || 'Sin dirección';
+
+            const estado = datos.ESTADO || 'Sin estado';
+            const estadoLower = estado.toLowerCase().replace(/ /g, '_');
+            document.getElementById('doc-info-estado').textContent = estado;
+            document.getElementById('doc-info-estado').className = 'badge badge-' + estadoLower;
+
+            document.getElementById('info-registro').style.display = 'block';
+            document.getElementById('panel-documentos').style.display = 'block';
+          } else {
+            alert('❌ No se encontró el registro: ' + reg);
+            document.getElementById('info-registro').style.display = 'none';
+            document.getElementById('panel-documentos').style.display = 'none';
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          console.error('Error buscando registro:', error);
+          alert('❌ Error: ' + error.message);
+        })
+        .buscarPorReg(reg);
+    }
+
+    function generarContracara() {
+      if (!regActualDoc) {
+        alert('⚠️ Primero debe buscar un registro');
+        return;
+      }
+      generarDocumento('generarContracara', regActualDoc);
+    }
+
+    function generarInformePost() {
+      if (!regActualDoc) {
+        alert('⚠️ Primero debe buscar un registro');
+        return;
+      }
+      generarDocumento('generarInformesPostInspeccion', regActualDoc);
+    }
+
+    function generarActaPatente() {
+      if (!regActualDoc) {
+        alert('⚠️ Primero debe buscar un registro');
+        return;
+      }
+      generarDocumento('generarActaPatente', regActualDoc);
+    }
+
+    function generarActaObs() {
+      if (!regActualDoc) {
+        alert('⚠️ Primero debe buscar un registro');
+        return;
+      }
+      generarDocumento('generarActaObservaciones', regActualDoc);
+    }
+
+    function generarActaDeneg() {
+      if (!regActualDoc) {
+        alert('⚠️ Primero debe buscar un registro');
+        return;
+      }
+      generarDocumento('generarActaDenegacion', regActualDoc);
+    }
+
+    function generarReporteJefatura() {
+      if (!confirm('¿Generar reporte de jefatura del período actual?')) {
+        return;
+      }
+
+      showLoading();
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideLoading();
+          if (result && result.url) {
+            showMessage('resultado-documento',
+              '✅ <strong>Reporte generado exitosamente</strong><br>' +
+              '<a href="' + result.url + '" target="_blank">📄 Abrir documento</a>', 'success');
+            window.open(result.url, '_blank');
+          } else {
+            showMessage('resultado-documento', '❌ Error generando reporte de jefatura', 'error');
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          console.error('Error generando reporte:', error);
+          showMessage('resultado-documento', '❌ Error: ' + error.message, 'error');
+        })
+        .generarReporteJefatura();
+    }
+
+    function generarDocumento(funcion, reg) {
+      showLoading();
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideLoading();
+          if (result && result.url) {
+            showMessage('resultado-documento',
+              '✅ <strong>Documento generado exitosamente</strong><br>' +
+              '<a href="' + result.url + '" target="_blank">📄 Abrir documento</a>', 'success');
+            window.open(result.url, '_blank');
+          } else if (result && result.msg) {
+            showMessage('resultado-documento', 'ℹ️ ' + result.msg, 'info');
+          } else {
+            showMessage('resultado-documento', '❌ Error generando documento', 'error');
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          console.error('Error en generarDocumento:', error);
+          showMessage('resultado-documento', '❌ Error: ' + error.message, 'error');
+        })[funcion](reg);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TAB 5: CONSULTAS - MEJORADA
+    // ═══════════════════════════════════════════════════════════════
+
+    function realizarConsulta() {
+      const campo = document.getElementById('consulta-campo').value;
+      const valor = sanitizeInput(document.getElementById('consulta-valor').value);
+
+      if (!valor) {
+        alert('⚠️ Por favor ingrese un valor para buscar');
+        return;
+      }
+
+      showLoading();
+
+      google.script.run
+        .withSuccessHandler(mostrarResultadosConsulta)
+        .withFailureHandler(function(error) {
+          hideLoading();
+          console.error('Error en consulta:', error);
+          alert('❌ Error: ' + error.message);
+        })
+        .buscarRegistros(campo, valor);
+    }
+
+    function filtrarPorEstado() {
+      const estado = document.getElementById('consulta-estado').value;
+
+      showLoading();
+
+      google.script.run
+        .withSuccessHandler(mostrarResultadosConsulta)
+        .withFailureHandler(function(error) {
+          hideLoading();
+          console.error('Error filtrando por estado:', error);
+          alert('❌ Error: ' + error.message);
+        })
+        .filtrarPorEstado(estado);
+    }
+
+    function mostrarResultadosConsulta(resultados) {
+      hideLoading();
+      const tbody = document.getElementById('tbody-consultas');
+
+      if (!tbody) return;
+
+      if (!resultados || resultados.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;">ℹ️ No se encontraron resultados</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = resultados.map(r => {
+        const estadoLower = (r.ESTADO || 'pendiente').toLowerCase().replace(/ /g, '_');
+        return `
+          <tr>
+            <td>${r.REG || '-'}</td>
+            <td>${r.NOMBRE || '-'}</td>
+            <td>${r.DIRECCION || '-'}</td>
+            <td><span class="badge badge-${estadoLower}">${r.ESTADO || '-'}</span></td>
+            <td>${r.TIMESTAMP ? formatDate(r.TIMESTAMP) : '-'}</td>
+            <td>
+              <button class="btn btn-outline" style="padding:5px 10px;font-size:12px;"
+                      onclick="verDetalle('${r.REG || ''}')">Ver</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function verDetalle(reg) {
+      if (!reg) return;
+
+      document.getElementById('doc-reg').value = reg;
+      showTab('documentos');
+      setTimeout(() => buscarParaDocumentos(), 100);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TAB 6: ESTADÍSTICAS - MEJORADA
+    // ═══════════════════════════════════════════════════════════════
+
+    function cargarEstadisticas() {
+      showLoading();
+
+      google.script.run
+        .withSuccessHandler(function(stats) {
+          hideLoading();
+
+          if (!stats) {
+            console.error('No se recibieron estadísticas');
+            return;
+          }
+
+          // Actualizar cards de estadísticas
+          document.getElementById('stat-total').textContent = stats.total || 0;
+          document.getElementById('stat-pendientes').textContent = stats.pendientes || 0;
+          document.getElementById('stat-listos').textContent = stats.listosVisita || 0;
+          document.getElementById('stat-aptos').textContent = stats.aptos || 0;
+          document.getElementById('stat-observados').textContent = stats.observados || 0;
+          document.getElementById('stat-desistidos').textContent = stats.desistidos || 0;
+
+          // Cargar tabla de sectores
+          if (stats.porSector && Array.isArray(stats.porSector)) {
+            const tbody = document.getElementById('tbody-sectores');
+            if (tbody) {
+              if (stats.porSector.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;">Sin datos por sector</td></tr>';
+              } else {
+                tbody.innerHTML = stats.porSector.map(s => `
+                  <tr>
+                    <td>${s.sector || '-'}</td>
+                    <td>${s.total || 0}</td>
+                    <td>${s.pendientes || 0}</td>
+                    <td>${s.aptos || 0}</td>
+                    <td>${s.observados || 0}</td>
+                  </tr>
+                `).join('');
+              }
+            }
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          console.error('Error cargando estadísticas:', error);
+          alert('❌ Error cargando estadísticas: ' + error.message);
+        })
+        .obtenerEstadisticas();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // INICIALIZACIÓN - MEJORADA
+    // ═══════════════════════════════════════════════════════════════
+
+    function inicializarApp() {
+      try {
+        console.log('Iniciando aplicación...');
+
+        // Configurar event listeners para tabs usando delegación de eventos
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const tabId = this.getAttribute('data-tab');
+            if (tabId) {
+              showTab(tabId);
+            }
+          });
+        });
+
+        // Cargar sectores
+        cargarSectores();
+
+        // Configurar fecha de hoy por defecto
+        const hoy = new Date().toISOString().split('T')[0];
+        const fechaInspeccion = document.getElementById('fecha-inspeccion');
+        const fechaFiltroIpad = document.getElementById('fecha-filtro-ipad');
+
+        if (fechaInspeccion) fechaInspeccion.value = hoy;
+        if (fechaFiltroIpad) fechaFiltroIpad.value = hoy;
+
+        console.log('✅ Aplicación inicializada correctamente');
+      } catch (error) {
+        console.error('❌ Error inicializando aplicación:', error);
+      }
+    }
+
+    // Ejecutar cuando el DOM esté listo
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', inicializarApp);
+    } else {
+      inicializarApp();
+    }
+  </script>
+</body>
+</html>
